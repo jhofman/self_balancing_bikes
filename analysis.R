@@ -1,4 +1,3 @@
-load("data/clean_citibike.RData")
 library(reshape)
 library(data.table)
 library(ggplot2)
@@ -10,6 +9,8 @@ theme_set(theme_bw())
 output_dir <- "plots/"
 
 prettytimes <- c(paste0(c(12, 1:11),"am"), paste0(c(12,1:11),"pm"))
+
+load("data/clean_citibike.RData")
 
 #Figure 1: Number of trips by time of day and weekday/weekend
 plotdata <- trips[ , list(num.trips = .N/length(unique(startymd))), by = c("rounded.starttime", "is.weekday")]
@@ -233,299 +234,49 @@ ggsave(plot=p, file = filename, width = 6, height = 6)
 
 
 ###########################################
+# load simulation data from clean_sim_data.R
+###########################################
+load('data/simulation.RData')
 
-# Figure 9: Algorithm without vans, rerouting on simulation: congested/starved
-sim_data <- read.delim("data/sim_greedy.tsv", header=F)
-sim_data <- data.frame(sim_data)
+# compute fration of available bikes at each point in time
+simulation <- simulation[, p.avail := start.available.bikes/start.station.cap]
 
-colnames(sim_data) <- c("starttime","station.name","available.bikes","station.cap","station.prox"
-                        ,"station.name","available.bikes","station.cap","station.prox")
-sim_data <- data.table(sim_data)
-DF1 <- sim_data[,c(1,2,3,4,5), with=FALSE]
-DF2 <- sim_data[,c(1,6,7,8,9), with=FALSE]
-DF2 <- data.frame(DF2)
-DF1 <- data.frame(DF1)
-
-simulation <- merge(DF1, DF2, by.x=c("starttime", "station.name", "available.bikes", "station.cap","station.prox"),by.y=c("starttime", "station.name", "available.bikes", "station.cap","station.prox") ,all=TRUE)
-rm(DF1)
-rm(DF2)
-rm(sim_data)
-simulation <- data.table(simulation)
-simulation[, starttime := round(as.numeric(as.POSIXct(starttime,origin="1970-01-01"))/(15*60))*(15*60)]
+# filter to weekdays only
 simulation <- simulation[, is_weekday := strftime(as.POSIXct(starttime, origin="1970-01-01"),format="%u")]
 simulation <- simulation[, is_weekday := ifelse(is_weekday < 6, TRUE, FALSE)]
-simulation <- simulation[, ymd := strftime(as.POSIXct(starttime, origin="1970-01-01"), format="%F")]
-simulation <- simulation[, rounded.interval := strftime(as.POSIXct(starttime, origin="1970-01-01"),format="%H:%M")]
+simulation <- simulation[is_weekday == T]
 
-#sim_2 <- simulation
-#setkey(sim_2, station.name, rounded.interval)
-# Subset the data for any issues  
-sim_subset <- simulation[!(is.na(as.character(station.name))),]
-sim_subset <- sim_subset[!(is.na(available.bikes))]
-sim_subset <- sim_subset[is_weekday == T & ymd <= "2013-11-31" & ymd >= "2013-07-01"] 
-sim_subset <- sim_subset[, p.avail := available.bikes/station.cap]
-#sim_subset <- sim_subset %>% group_by(station.name, rounded.interval) %>% s
-#sim_save <- sim_subset
+# compute the average condition in each 15 minute interval for each station
+sim_by_station_and_time <- simulation[, list(Congested = mean(p.avail > .8),
+                                           Starved = mean(p.avail < .2)), by = c('strategy','rounded.interval','start.station.name') ]
 
-# If you take the mean you get the percentage of trues
-sim_by_time <- sim_subset[, list(Congested = mean(p.avail > .8), 
-                                 Starved = mean(p.avail < .2)), by = 'rounded.interval' ]
+# average across stations for each 15 minute interval
+sim_by_time_across_stations <- sim_by_station_and_time[, list(Congested=mean(Congested),
+                                                              Starved=mean(Starved)), by=c('strategy','rounded.interval')]
 
-#setkey(sim_by_time, rounded.interval)
-plotdata <- melt(sim_by_time, id = "rounded.interval")
+# Figure 9: System health from simulations (No vans, No vans + local re-routing)
+alt_prettytimes <- c(paste0(c(12, 1:11),"am"), paste0(c(12,1:11),"pm"))
+
+plotdata <- melt(sim_by_time_across_stations, id = c("rounded.interval","strategy"), measure.vars=c("Congested","Starved"))
+plotdata <- transform(plotdata, strategy=revalue(strategy, c(rider="No vans", greedy="No vans + re-routing")))
+plotdata <- transform(plotdata, rounded.interval=factor(rounded.interval, levels=unique(rounded.interval)))
+
 p <- ggplot(data = plotdata, aes(x=as.integer(as.factor(rounded.interval)), y = value))
 p <- p + geom_line(aes(color=variable))
+p <- p + facet_wrap(~ strategy)
 p <- p + scale_y_continuous("Percentage of stations\n", labels = percent_format(), limits = c(0,.5))
-p <- p +  scale_x_continuous("", 
-                             breaks = seq(1,96,by=8), 
-                             labels = prettytimes[seq(1,24, by = 2)])
-p <- p + theme(legend.position = c(.1,.9), 
+p <- p +  scale_x_continuous("",
+                             breaks = seq(1,96,by=8),
+                             labels = alt_prettytimes[c(seq(5,24,by=2),1,3)])
+p <- p + theme(legend.position = c(.1,.9),
                legend.title=element_blank(),
-               axis.text.x=element_text(angle=45, hjust=1), 
+               axis.text.x=element_text(angle=45, hjust=1),
                legend.background = element_rect(fill = "transparent"))
-p 
+p
 
-filename = paste0(output_dir,"station_status_no_vans_rerout.png") 
+filename = paste0(output_dir,"station_status_no_vans_reroute_facet.png")
 unlink(filename)
-ggsave(p, file = filename, width = 7, height = 5)
+ggsave(p, file = filename, width = 8, height = 4)
 
-# Figure 10: Rider Algorithm in simulation:congested/starved 
-sim_data <- read.delim("data/sim_rider.tsv", header=F)
-sim_data <- data.frame(sim_data)
-
-colnames(sim_data) <- c("starttime","station.name","available.bikes","station.cap","station.prox"
-                        ,"station.name","available.bikes","station.cap","station.prox")
-sim_data <- data.table(sim_data)
-DF1 <- sim_data[,c(1,2,3,4,5), with=FALSE]
-DF2 <- sim_data[,c(1,6,7,8,9), with=FALSE]
-DF2 <- data.frame(DF2)
-DF1 <- data.frame(DF1)
-
-simulation <- merge(DF1, DF2, by.x=c("starttime", "station.name", "available.bikes", "station.cap","station.prox"),by.y=c("starttime", "station.name", "available.bikes", "station.cap","station.prox") ,all=TRUE)
-rm(DF1)
-rm(DF2)
-#rm(sim_data)
-simulation <- data.table(simulation)
-simulation[, starttime := round(as.numeric(as.POSIXct(starttime,origin="1970-01-01"))/(15*60))*(15*60)]
-simulation <- simulation[, is_weekday := strftime(as.POSIXct(starttime, origin="1970-01-01"),format="%u")]
-simulation <- simulation[, is_weekday := ifelse(is_weekday < 6, TRUE, FALSE)]
-simulation <- simulation[, ymd := strftime(as.POSIXct(starttime, origin="1970-01-01"), format="%F")]
-simulation <- simulation[, rounded.interval := strftime(as.POSIXct(starttime, origin="1970-01-01"),format="%H:%M")]
-
-#sim_2 <- simulation
-#setkey(sim_2, station.name, rounded.interval)
-# Subset the data for any issues  
-
-sim_subset <- simulation[is_weekday == T & ymd <= "2013-11-31" & ymd >= "2013-07-01"] 
-sim_subset <- sim_subset[, p.avail := available.bikes/station.cap]
-#sim_subset <- sim_subset %>% group_by(station.name, rounded.interval) %>% s
-#sim_save <- sim_subset
-
-# If you take the mean you get the percentage of trues
-sim_by_time_trips_weighted_no_vans <- sim_subset[, list(Congested = mean(p.avail > .8), 
-                                                        Starved = mean(p.avail < .2)), by = 'rounded.interval' ]
-
-sim_by_time_station_weighted_no_vans <- sim_subset[, list(Congested = mean(p.avail > .8), 
-                                                          Starved = mean(p.avail < .2)), by = c('rounded.interval', 'station.name') ]
-
-sim_by_time_station_weighted_no_vans <- sim_by_time_station_weighted_no_vans[, list(Congested = mean(Congested), 
-                                                                                    Starved = mean(Starved)), by = 'rounded.interval' ]
-sum(is.na(simulation$station.prox)) / nrow(simulation)
-X <- filter(sim_data, V5 > 0)
-mean(X$V5)
-median(X$V5)
-
-save(sim_by_time_station_weighted_no_vans, sim_by_time_trips_weighted_no_vans, file = "sim_weighted_novans.RData")
-load("sims_weighted_rerouted.RData")
-
-sim_by_time_station_weighted_no_vans <- sim_by_time_station_weighted_no_vans[, type:= "NoVans_StationW"]
-sim_by_time_station_weighted_rerouted <- sim_by_time_station_weighted_rerouted[, type:= "Rerouted_StationW"]
-sim_by_time_trips_weighted_no_vans <- sim_by_time_trips_weighted_no_vans[, type:= "NoVans_TripsW"]
-sim_by_time_trips_weighted_rerouted <- sim_by_time_trips_weighted_rerouted[, type:= "Rerouted_TripsW"]
-
-station_rbind <- rbind(sim_by_time_station_weighted_no_vans, sim_by_time_station_weighted_rerouted)
-trips_rbind <- rbind(sim_by_time_trips_weighted_no_vans, sim_by_time_trips_weighted_rerouted)
-
-melted_station <- melt(station_rbind, id = c("rounded.interval", "type"))
-melted_station <- data.frame(melted_station)
-melted_station <- transform(melted_station, tag = ifelse(variable == "Congested" & type == "NoVans_StationW", "No Vans: Congested",
-                                                         ifelse(variable == "Congested" & type == "Rerouted_StationW", "Rerouted: Congested",
-                                                                ifelse(variable == "Starved" & type == "NoVans_StationW","No Vans: Starved" , "Rerouted: Starved"))))
-
-save(station_rbind, trips_rbind, file = "rbinds.RData")
-
-p <- ggplot(data = melted_station, aes(x=as.integer(as.factor(rounded.interval)), y = value, color = tag ))
-p <- p + geom_line() 
-p <- p + scale_y_continuous("Percent Stations\n", labels = percent_format(), limits = c(0,.5))
-p <- p +  scale_x_continuous("\nStation Weighted", 
-                             breaks = seq(1,96,by=8), 
-                             labels = prettytimes[seq(1,24, by = 2)])
-p <- p + theme(legend.position = c(.15,.87), 
-               legend.title=element_blank(),
-               axis.text.x=element_text(angle=45, hjust=1), 
-               legend.background = element_rect(fill = "transparent"))
-p 
-
-filename = paste0(output_dir,"stationweighted_4lines.png") 
-unlink(filename)
-ggsave(p, file = filename, width = 7, height = 5)
-
-
-
-
-
-
-
-
-
-melted_trips <- melt(trips_rbind, id = c("rounded.interval", "type"))
-melted_trips <- data.frame(melted_trips)
-melted_trips <- transform(melted_trips, tag = ifelse(variable == "Congested" & type == "NoVans_TripsW", "No Vans: Congested",
-                                                     ifelse(variable == "Congested" & type == "Rerouted_TripsW", "Rerouted: Congested",
-                                                            ifelse(variable == "Starved" & type == "NoVans_TripsW","No Vans: Starved" , "Rerouted: Starved"))))
-
-p <- ggplot(data = melted_trips, aes(x=as.integer(as.factor(rounded.interval)), y = value, color = tag ))
-p <- p + geom_line() 
-p <- p + scale_y_continuous("Percent Stations\n", labels = percent_format(), limits = c(0,.5))
-p <- p +  scale_x_continuous("\nTrips Weighted", 
-                             breaks = seq(1,96,by=8), 
-                             labels = prettytimes[seq(1,24, by = 2)])
-p <- p + theme(legend.position = c(.15,.87), 
-               legend.title=element_blank(),
-               axis.text.x=element_text(angle=45, hjust=1), 
-               legend.background = element_rect(fill = "transparent"))
-p 
-
-filename = paste0(output_dir,"tripsweighted_4lines.png") 
-unlink(filename)
-ggsave(p, file = filename, width = 7, height = 5)
-
-
-
-
-
-
-
-
-
-
-
-#setkey(sim_by_time, rounded.interval) Weighted trips
-plotdata <- melt(sim_by_time_trips_weighted, id = "rounded.interval")
-p <- ggplot(data = plotdata, aes(x=as.integer(as.factor(rounded.interval)), y = value))
-p <- p + geom_line(aes(color=variable))
-p <- p + scale_y_continuous("Percentage of stations\n", labels = percent_format(), limits = c(0,.5))
-p <- p +  scale_x_continuous("", 
-                             breaks = seq(1,96,by=8), 
-                             labels = prettytimes[seq(1,24, by = 2)])
-p <- p + theme(legend.position = c(.1,.9), 
-               legend.title=element_blank(),
-               axis.text.x=element_text(angle=45, hjust=1), 
-               legend.background = element_rect(fill = "transparent"))
-p 
-
-filename = paste0(output_dir,"sim_by_time_trips_weighted_novans.png") 
-unlink(filename)
-ggsave(p, file = filename, width = 7, height = 5)
-
-#Weighted station
-plotdata <- melt(sim_by_time_station_weighted, id = "rounded.interval")
-p <- ggplot(data = plotdata, aes(x=as.integer(as.factor(rounded.interval)), y = value))
-p <- p + geom_line(aes(color=variable))
-p <- p + scale_y_continuous("Percentage of stations\n", labels = percent_format(), limits = c(0,.5))
-p <- p +  scale_x_continuous("", 
-                             breaks = seq(1,96,by=8), 
-                             labels = prettytimes[seq(1,24, by = 2)])
-p <- p + theme(legend.position = c(.1,.9), 
-               legend.title=element_blank(),
-               axis.text.x=element_text(angle=45, hjust=1), 
-               legend.background = element_rect(fill = "transparent"))
-p 
-
-filename = paste0(output_dir,"sim_by_time_station_weighted_novans.png") 
-unlink(filename)
-ggsave(p, file = filename, width = 7, height = 5)
-
-
-### trips rerouted, plotting trips weighted and stations weighted
-# Figure 9: Algorithm without vans, rerouting on simulation: congested/starved
-sim_data <- read.delim("data/sim_greedy.tsv", header=F)
-sim_data <- data.frame(sim_data)
-
-colnames(sim_data) <- c("starttime","station.name","available.bikes","station.cap","station.prox"
-                        ,"station.name","available.bikes","station.cap","station.prox")
-sim_data <- data.table(sim_data)
-DF1 <- sim_data[,c(1,2,3,4,5), with=FALSE]
-DF2 <- sim_data[,c(1,6,7,8,9), with=FALSE]
-DF2 <- data.frame(DF2)
-DF1 <- data.frame(DF1)
-
-simulation <- merge(DF1, DF2, by.x=c("starttime", "station.name", "available.bikes", "station.cap","station.prox"),by.y=c("starttime", "station.name", "available.bikes", "station.cap","station.prox") ,all=TRUE)
-rm(DF1)
-rm(DF2)
-rm(sim_data)
-simulation <- data.table(simulation)
-simulation[, starttime := round(as.numeric(as.POSIXct(starttime,origin="1970-01-01"))/(15*60))*(15*60)]
-simulation <- simulation[, is_weekday := strftime(as.POSIXct(starttime, origin="1970-01-01"),format="%u")]
-simulation <- simulation[, is_weekday := ifelse(is_weekday < 6, TRUE, FALSE)]
-simulation <- simulation[, ymd := strftime(as.POSIXct(starttime, origin="1970-01-01"), format="%F")]
-simulation <- simulation[, rounded.interval := strftime(as.POSIXct(starttime, origin="1970-01-01"),format="%H:%M")]
-
-#sim_2 <- simulation
-#setkey(sim_2, station.name, rounded.interval)
-# Subset the data for any issues  
-sim_subset <- simulation[!(is.na(as.character(station.name))),]
-sim_subset <- sim_subset[!(is.na(available.bikes))]
-sim_subset <- sim_subset[is_weekday == T & ymd <= "2013-11-31" & ymd >= "2013-07-01"] 
-sim_subset <- sim_subset[, p.avail := available.bikes/station.cap]
-#sim_subset <- sim_subset %>% group_by(station.name, rounded.interval) %>% s
-#sim_save <- sim_subset
-
-# If you take the mean you get the percentage of trues
-sim_by_time_trips_weighted_rerouted <- sim_subset[, list(Congested = mean(p.avail > .8), 
-                                                         Starved = mean(p.avail < .2)), by = 'rounded.interval' ]
-
-sim_by_time_station_weighted_rerouted <- sim_subset[, list(Congested = mean(p.avail > .8), 
-                                                           Starved = mean(p.avail < .2)), by = c('rounded.interval', 'station.name') ]
-
-sim_by_time_station_weighted_rerouted <- sim_by_time_station_weighted_rerouted[, list(Congested = mean(Congested), 
-                                                                                      Starved = mean(Starved)), by = 'rounded.interval' ]
-save(sim_by_time_trips_weighted_rerouted, sim_by_time_station_weighted_rerouted, file="sims_weighted_rerouted.RData")
-#setkey(sim_by_time, rounded.interval)
-# station weighted
-plotdata <- melt(sim_by_time_station_weighted_rerouted, id = "rounded.interval")
-p <- ggplot(data = plotdata, aes(x=as.integer(as.factor(rounded.interval)), y = value))
-p <- p + geom_line(aes(color=variable))
-p <- p + scale_y_continuous("Percentage of stations\n", labels = percent_format(), limits = c(0,.5))
-p <- p +  scale_x_continuous("", 
-                             breaks = seq(1,96,by=8), 
-                             labels = prettytimes[seq(1,24, by = 2)])
-p <- p + theme(legend.position = c(.1,.9), 
-               legend.title=element_blank(),
-               axis.text.x=element_text(angle=45, hjust=1), 
-               legend.background = element_rect(fill = "transparent"))
-p 
-
-filename = paste0(output_dir,"station_status_no_vans_rerout_station_weighted.png") 
-unlink(filename)
-ggsave(p, file = filename, width = 7, height = 5)
-
-# trip weighted
-plotdata <- melt(sim_by_time_trips_weighted, id = "rounded.interval")
-p <- ggplot(data = plotdata, aes(x=as.integer(as.factor(rounded.interval)), y = value))
-p <- p + geom_line(aes(color=variable))
-p <- p + scale_y_continuous("Percentage of stations\n", labels = percent_format(), limits = c(0,.5))
-p <- p +  scale_x_continuous("", 
-                             breaks = seq(1,96,by=8), 
-                             labels = prettytimes[seq(1,24, by = 2)])
-p <- p + theme(legend.position = c(.1,.9), 
-               legend.title=element_blank(),
-               axis.text.x=element_text(angle=45, hjust=1), 
-               legend.background = element_rect(fill = "transparent"))
-p 
-
-filename = paste0(output_dir,"station_status_no_vans_rerout_trips_weighted.png") 
-unlink(filename)
-ggsave(p, file = filename, width = 7, height = 5)
-
-
+# measure failure rates
+simulation[, mean(is.na(start.station.prox) | is.na(end.station.prox)), by="strategy"]
