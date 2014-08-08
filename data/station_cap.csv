@@ -1,0 +1,331 @@
+"station.name","station_capacity"
+"1 Ave & E 15 St",45
+"1 Ave & E 18 St",30
+"1 Ave & E 30 St",29
+"1 Ave & E 44 St",39
+"10 Ave & W 28 St",37
+"11 Ave & W 27 St",31
+"11 Ave & W 41 St",31
+"12 Ave & W 40 St",53
+"2 Ave & E 31 St",39
+"2 Ave & E 58 St",29
+"3 Ave & Schermerhorn St",35
+"5 Ave & E 29 St",47
+"6 Ave & Broome St",36
+"6 Ave & Canal St",47
+"6 Ave & W 33 St",36
+"7 Ave & Farragut St",15
+"8 Ave & W 31 St",67
+"8 Ave & W 33 St",59
+"8 Ave & W 52 St",31
+"9 Ave & W 14 St",39
+"9 Ave & W 16 St",25
+"9 Ave & W 18 St",27
+"9 Ave & W 22 St",36
+"9 Ave & W 45 St",31
+"Adelphi St & Myrtle Ave",23
+"Allen St & E Houston St",36
+"Allen St & Hester St",43
+"Allen St & Rivington St",42
+"Ashland Pl & Hanson Pl",39
+"Atlantic Ave & Fort Greene Pl",62
+"Atlantic Ave & Furman St",31
+"Avenue D & E 12 St",24
+"Avenue D & E 3 St",23
+"Avenue D & E 8 St",24
+"Bank St & Hudson St",27
+"Bank St & Washington St",31
+"Barclay St & Church St",47
+"Barrow St & Hudson St",31
+"Bayard St & Baxter St",43
+"Bedford Ave & S 9th St",23
+"Bialystoker Pl & Delancey St",23
+"Bond St & Schermerhorn St",30
+"Broad St & Bridge St",35
+"Broadway & Battery Pl",36
+"Broadway & Berry St",27
+"Broadway & E 14 St",47
+"Broadway & E 22 St",42
+"Broadway & W 24 St",52
+"Broadway & W 29 St",39
+"Broadway & W 32 St",30
+"Broadway & W 36 St",57
+"Broadway & W 37 St",57
+"Broadway & W 39 St",50
+"Broadway & W 41 St",39
+"Broadway & W 49 St",51
+"Broadway & W 51 St",52
+"Broadway & W 53 St",57
+"Broadway & W 55 St",59
+"Broadway & W 58 St",59
+"Broadway & W 60 St",36
+"Cadman Plaza E & Red Cross Pl",27
+"Cadman Plaza E & Tillary St",23
+"Canal St & Rutgers St",31
+"Carlton Ave & Park Ave",23
+"Carmine St & 6 Ave",39
+"Catherine St & Monroe St",35
+"Central Park S & 6 Ave",49
+"Centre St & Chambers St",39
+"Centre St & Worth St",43
+"Cherry St",24
+"Christopher St & Greenwich St",36
+"Church St & Leonard St",39
+"Clark St & Henry St",31
+"Clermont Ave & Lafayette Ave",23
+"Clermont Ave & Park Ave",19
+"Cleveland Pl & Spring St",33
+"Cliff St & Fulton St",37
+"Clinton Ave & Flushing Ave",23
+"Clinton Ave & Myrtle Ave",33
+"Clinton St & Grand St",28
+"Clinton St & Joralemon St",25
+"Clinton St & Tillary St",31
+"Columbia Heights & Cranberry St",23
+"Columbia St & Rivington St",29
+"Concord St & Bridge St",19
+"Cumberland St & Lafayette Ave",31
+"Dean St & 4 Ave",34
+"DeKalb Ave & Hudson Ave",51
+"DeKalb Ave & S Portland Ave",28
+"DeKalb Ave & Skillman St",19
+"DeKalb Ave & Vanderbilt Ave",23
+"Division St & Bowery",35
+"Duane St & Greenwich St",25
+"Duffield St & Willoughby St",31
+"E 10 St & 5 Ave",31
+"E 10 St & Avenue A",42
+"E 11 St & 1 Ave",27
+"E 11 St & 2 Ave",39
+"E 11 St & Broadway",27
+"E 12 St & 3 Ave",35
+"E 13 St & Avenue A",39
+"E 14 St & Avenue B",33
+"E 15 St & 3 Ave",27
+"E 16 St & 5 Ave",47
+"E 16 St & Irving Pl",37
+"E 17 St & Broadway",59
+"E 19 St & 3 Ave",35
+"E 2 St & 2 Ave",31
+"E 2 St & Avenue B",37
+"E 2 St & Avenue C",31
+"E 20 St & 2 Ave",39
+"E 20 St & FDR Drive",36
+"E 20 St & Park Ave",29
+"E 23 St & 1 Ave",27
+"E 25 St & 1 Ave",30
+"E 25 St & 2 Ave",47
+"E 27 St & 1 Ave",36
+"E 3 St & 1 Ave",31
+"E 30 St & Park Ave S",38
+"E 31 St & 3 Ave",47
+"E 32 St & Park Ave",41
+"E 33 St & 1 Ave",59
+"E 33 St & 5 Ave",43
+"E 37 St & Lexington Ave",26
+"E 39 St & 2 Ave",39
+"E 39 St & 3 Ave",45
+"E 4 St & 2 Ave",39
+"E 40 St & 5 Ave",55
+"E 43 St & 2 Ave",39
+"E 43 St & Vanderbilt Ave",31
+"E 45 St & 3 Ave",32
+"E 47 St & 1 Ave",39
+"E 47 St & 2 Ave",47
+"E 47 St & Park Ave",55
+"E 48 St & 3 Ave",55
+"E 5 St & Avenue C",31
+"E 51 St & 1 Ave",35
+"E 51 St & Lexington Ave",51
+"E 52 St & 2 Ave",35
+"E 53 St & Lexington Ave",34
+"E 53 St & Madison Ave",35
+"E 55 St & 2 Ave",29
+"E 55 St & Lexington Ave",36
+"E 56 St & 3 Ave",59
+"E 56 St & Madison Ave",46
+"E 58 St & 3 Ave",33
+"E 59 St & Sutton Pl",33
+"E 6 St & Avenue B",27
+"E 6 St & Avenue D",23
+"E 7 St & Avenue A",31
+"E 9 St & Avenue C",36
+"Elizabeth St & Hester St",31
+"Emerson Pl & Myrtle Ave",31
+"FDR Drive & E 35 St",43
+"Flushing Ave & Carlton Ave",23
+"Forsyth St & Broome St",39
+"Forsyth St & Canal St",29
+"Franklin Ave & Myrtle Ave",27
+"Franklin St & W Broadway",33
+"Front St & Gold St",23
+"Front St & Maiden Ln",39
+"Front St & Washington St",30
+"Fulton St & Clermont Ave",27
+"Fulton St & Grand Ave",31
+"Fulton St & Rockwell Pl",39
+"Fulton St & Waverly Ave",31
+"Fulton St & William St",43
+"Gallatin Pl & Livingston St",38
+"Grand Army Plaza & Central Park S",59
+"Grand St & Greene St",39
+"Grand St & Havemeyer St",31
+"Great Jones St",27
+"Greenwich Ave & 8 Ave",43
+"Greenwich Ave & Charles St",39
+"Greenwich St & N Moore St",31
+"Greenwich St & Warren St",33
+"Hancock St & Bedford Ave",27
+"Hanover Pl & Livingston St",30
+"Harrison St & Hudson St",27
+"Henry St & Atlantic Ave",23
+"Henry St & Poplar St",43
+"Hicks St & Montague St",34
+"Howard St & Centre St",27
+"Hudson St & Reade St",39
+"Jay St & Tech Pl",34
+"John St & William St",43
+"Johnson St & Gold St",27
+"Joralemon St & Adams St",39
+"Kent Ave & S 11 St",27
+"Lafayette Ave & Classon Ave",27
+"Lafayette Ave & Fort Greene Pl",31
+"Lafayette Ave & St James Pl",27
+"Lafayette St & E 8 St",55
+"Lafayette St & Jersey St",40
+"LaGuardia Pl & W 3 St",35
+"Laight St & Hudson St",23
+"Lawrence St & Willoughby St",39
+"Lefferts Pl & Franklin Ave",25
+"Lexington Ave & Classon Ave",19
+"Lexington Ave & E 24 St",39
+"Lexington Ave & E 26 St",39
+"Liberty St & Broadway",45
+"Lispenard St & Broadway",39
+"Little West St & 1 Pl",24
+"MacDougal St & Prince St",30
+"MacDougal St & Washington Sq",33
+"Macon St & Nostrand Ave",27
+"Madison St & Clinton St",27
+"Madison St & Montgomery St",20
+"Maiden Ln & Pearl St",27
+"Market St & Cherry St",23
+"Mercer St & Bleecker St",30
+"Mercer St & Spring St",31
+"Metropolitan Ave & Bedford Ave",31
+"Monroe St & Bedford Ave",23
+"Monroe St & Classon Ave",19
+"Montague St & Clinton St",39
+"Mott St & Prince St",27
+"Murray St & West St",41
+"Myrtle Ave & St Edwards St",23
+"Nassau St & Navy St",19
+"Norfolk St & Broome St",31
+"Old Fulton St",39
+"Old Slip & Front St",37
+"Park Ave & St Edwards St",19
+"Park Pl & Church St",35
+"Pearl St & Anchorage Pl",24
+"Pearl St & Hanover Square",42
+"Perry St & Bleecker St",20
+"Pershing Square N",61
+"Pershing Square S",59
+"Pike St & E Broadway",24
+"Pike St & Monroe St",27
+"Pitt St & Stanton St",15
+"Railroad Ave & Kay Ave",12
+"Reade St & Broadway",39
+"Rivington St & Chrystie St",42
+"Rivington St & Ridge St",23
+"S 3 St & Bedford Ave",25
+"S 4 St & Wythe Ave",23
+"S 5 Pl & S 4 St",43
+"S Portland Ave & Hanson Pl",27
+"Sands St & Gold St",36
+"Shevchenko Pl & E 6 St",55
+"South End Ave & Liberty St",29
+"South St & Gouverneur Ln",29
+"South St & Whitehall St",39
+"Spruce St & Nassau St",31
+"St James Pl & Oliver St",27
+"St James Pl & Pearl St",27
+"St Marks Pl & 1 Ave",27
+"St Marks Pl & 2 Ave",39
+"Stanton St & Chrystie St",35
+"Stanton St & Mangin St",19
+"State St",59
+"State St & Smith St",36
+"Suffolk St & Stanton St",35
+"Sullivan St & Washington Sq",36
+"University Pl & E 14 St",36
+"Vesey Pl & River Terrace",39
+"W 11 St & 6 Ave",31
+"W 13 St & 5 Ave",46
+"W 13 St & 6 Ave",35
+"W 13 St & 7 Ave",33
+"W 14 St & The High Line",37
+"W 15 St & 7 Ave",39
+"W 16 St & The High Line",28
+"W 17 St & 8 Ave",39
+"W 18 St & 6 Ave",47
+"W 20 St & 11 Ave",49
+"W 20 St & 7 Ave",31
+"W 20 St & 8 Ave",37
+"W 21 St & 6 Ave",47
+"W 22 St & 10 Ave",47
+"W 22 St & 8 Ave",39
+"W 24 St & 7 Ave",39
+"W 25 St & 6 Ave",35
+"W 26 St & 10 Ave",35
+"W 26 St & 8 Ave",35
+"W 27 St & 7 Ave",51
+"W 29 St & 9 Ave",27
+"W 31 St & 7 Ave",59
+"W 33 St & 7 Ave",49
+"W 34 St & 11 Ave",39
+"W 37 St & 10 Ave",31
+"W 37 St & 5 Ave",39
+"W 38 St & 8 Ave",51
+"W 39 St & 9 Ave",41
+"W 4 St & 7 Ave S",39
+"W 41 St & 8 Ave",59
+"W 42 St & 8 Ave",41
+"W 43 St & 10 Ave",35
+"W 43 St & 6 Ave",57
+"W 44 St & 5 Ave",44
+"W 45 St & 6 Ave",34
+"W 45 St & 8 Ave",43
+"W 46 St & 11 Ave",24
+"W 47 St & 10 Ave",25
+"W 49 St & 5 Ave",39
+"W 49 St & 8 Ave",59
+"W 51 St & 6 Ave",51
+"W 52 St & 11 Ave",39
+"W 52 St & 5 Ave",39
+"W 52 St & 9 Ave",31
+"W 53 St & 10 Ave",27
+"W 54 St & 9 Ave",39
+"W 56 St & 10 Ave",27
+"W 56 St & 6 Ave",36
+"W 59 St & 10 Ave",55
+"W Broadway & Spring St",42
+"W Houston St & Hudson St",35
+"Warren St & Church St",29
+"Washington Ave & Greene Ave",19
+"Washington Ave & Park Ave",23
+"Washington Park",24
+"Washington Pl & 6 Ave",35
+"Washington Pl & Broadway",27
+"Washington Square E",31
+"Washington St & Gansevoort St",40
+"Water - Whitehall Plaza",31
+"Watts St & Greenwich St",23
+"West St & Chambers St",31
+"West Thames St",49
+"William St & Pine St",39
+"Willoughby Ave & Hall St",31
+"Willoughby Ave & Walworth St",19
+"Willoughby St & Fleet St",31
+"Wythe Ave & Metropolitan Ave",27
+"York St & Jay St",27
+"Henry St & Grand St",30
